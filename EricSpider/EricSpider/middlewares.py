@@ -101,3 +101,39 @@ class EricspiderDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+from scrapy import signals
+from scrapy.http import HtmlResponse
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+class SeleniumMiddleware:
+    @classmethod
+    def from_crawler(cls, crawler):
+        middleware = cls()
+        crawler.signals.connect(middleware.spider_opened, signals.spider_opened)
+        crawler.signals.connect(middleware.spider_closed, signals.spider_closed)
+        return middleware
+
+    def spider_opened(self, spider):
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        self.driver = webdriver.Chrome(options=options)
+
+    def spider_closed(self, spider):
+        self.driver.close()
+
+    def process_request(self, request, spider):
+        self.driver.get(request.url)
+        # Wait for the dynamic content to load (if necessary)
+        # WebDriverWait(self.driver, 10).until(
+        #     EC.presence_of_element_located((By.XPATH, '//some_xpath'))
+        # )
+        body = str.encode(self.driver.page_source)
+        return HtmlResponse(self.driver.current_url, body=body, encoding='utf-8', request=request)
+
+    def process_response(self, request, response, spider):
+        response.meta['driver'] = self.driver
+        return response

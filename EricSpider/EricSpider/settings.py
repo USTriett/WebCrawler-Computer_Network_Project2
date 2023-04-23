@@ -22,17 +22,17 @@ SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
 SELENIUM_DRIVER_ARGUMENTS=['--headless']  
 
 DOWNLOADER_MIDDLEWARES = {
-     'scrapy_selenium.SeleniumMiddleware': 800
+     'EricSpider.middlewares.SeleniumMiddleware': 800
      }
 
-ITEM_PIPELINES = {"EricSpider.pipelines.EricspiderPipeline": 300}
+ITEM_PIPELINES = {"EricSpider.pipelines.JsonWriterPipeline": 500}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "EricSpider (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
-
+LOG_LEVEL = 'WARNING'
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 

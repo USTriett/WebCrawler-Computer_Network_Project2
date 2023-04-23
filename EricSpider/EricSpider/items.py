@@ -16,4 +16,6 @@ class ProductLazadaItem(scrapy.Item):
     Name = scrapy.Field()
     Price = scrapy.Field()
     Imgs = scrapy.Field()
+    Url = scrapy.Field()
+    WebDomain = scrapy.Field()
     Desc = scrapy.Field()
