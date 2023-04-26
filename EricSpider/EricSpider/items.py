@@ -19,3 +19,4 @@ class ProductLazadaItem(scrapy.Item):
     Url = scrapy.Field()
     WebDomain = scrapy.Field()
     Desc = scrapy.Field()
+    pass

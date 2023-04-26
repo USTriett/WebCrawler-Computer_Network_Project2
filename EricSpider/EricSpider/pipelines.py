@@ -28,7 +28,7 @@ class EricspiderPipeline(object):
         self.cursor = self.connection.cursor()
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS products (
-                name TEXT,
+                name TEXT unique,
                 price INTEGER,
                 imgs TEXT,
                 url TEXT,
@@ -40,9 +40,9 @@ class EricspiderPipeline(object):
 
     def process_item(self, item, spider):
         self.cursor.execute('''
-            INSERT INTO products (name, price, imgs, url, wedDomain, desc)
+            INSERT OR IGNORE INTO products (name, price, imgs, url, wedDomain, desc)
             VALUES (?, ?, ?, ?, ?, ?)
-        ''', (item['Name'], item['Price'], ','.join(item['Imgs']), item['Url'], item['WebDomain'], item['Desc']))
+        ''', (item['Name'], item['Price'], ','.join(item['Imgs']), item['Url'], item['WebDomain'], ','.join(item['Desc'])))
         self.connection.commit()
         return item
 
