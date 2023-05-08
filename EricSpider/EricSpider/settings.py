@@ -8,39 +8,45 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = "EricSpider"
-
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 SPIDER_MODULES = ["EricSpider.spiders"]
 NEWSPIDER_MODULE = "EricSpider.spiders"
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+# SCRAPEOPS_API_KEY = '0a44a38e-5585-4334-a422-ee18d1baba51'
+# SCRAPEOPS_PROXY_ENABLED = True
 DOWNLOAD_HANDLERS = {
     "http": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
     "https": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
+
 }
-
-
 # DOWNLOADER_MIDDLEWARES = {
-#      'EricSpider.middlewares.SeleniumMiddleware': 800
-#      }
+#     'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725,
+# }
+from shutil import which
+  
+SELENIUM_DRIVER_NAME = 'chrome'
+SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+SELENIUM_DRIVER_ARGUMENTS=['--headless']  
 
 
-ITEM_PIPELINES = {"EricSpider.pipelines.EricspiderPipeline": 500}
+ITEM_PIPELINES = {"EricSpider.pipelines.JsonWriterPipeline": 501}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "EricSpider (+http://www.yourdomain.com)"
+# USER_AGENT = "EricSpider (+https://www.ankhang.vn/)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 LOG_LEVEL = 'WARNING'
-CONCURRENT_REQUESTS = 5
+CONCURRENT_REQUESTS = 10
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+# DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -63,7 +69,7 @@ DOWNLOAD_DELAY = 1
 #    "EricSpider.middlewares.EricspiderSpiderMiddleware": 543,
 #}
 
-# Enable or disable downloader middlewares
+# Enable or disable do3wnloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
 #    "EricSpider.middlewares.EricspiderDownloaderMiddleware": 543,
