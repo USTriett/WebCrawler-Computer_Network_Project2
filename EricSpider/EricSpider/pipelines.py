@@ -11,7 +11,7 @@ import sqlite3
 import os
 class JsonWriterPipeline:
     def __init__(self):
-        self.file = open('DataFile/items.json', 'a', encoding="utf-8")
+        self.file = open('DataFile/items.json', 'w', encoding="utf-8")
         if os.stat('DataFile/items.json').st_size == 0:
             self.file.write('[\n')
 
@@ -29,7 +29,7 @@ class JsonWriterPipeline:
     
 class JsonCateWriterPipeline:
     def __init__(self):
-        self.file = open('DataFile/category1.json', 'a', encoding="utf-8")
+        self.file = open('DataFile/category1.json', 'w', encoding="utf-8")
         if os.stat('DataFile/category1.json').st_size == 0:
             self.file.write('[\n')
 
