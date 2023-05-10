@@ -6,3 +6,9 @@ def get_names(filename):
         data = json.load(json_file)
     names = [item['Name'] for item in data]
     return names
+
+def get_url(filename):
+    with open(filename, 'r', encoding="utf-8") as json_file:
+        data = json.load(json_file)
+    url = [item['Url'] for item in data]
+    return url

@@ -17,6 +17,13 @@ class SoSanhSpider(scrapy.Spider):
     start_urls = [ 'https://www.sosanhgia.com/s-{}'.format(s) for s in start_list]
     allowed_domains = ["www.sosanhgia.com"]
 
+    custom_settings = {
+                "DOWNLOAD_HANDLERS" : {
+                "http": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
+                "https": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
+
+                }
+    }
 
     def start_requests(self):
         # for i in range(651, 709):

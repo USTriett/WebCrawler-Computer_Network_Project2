@@ -15,6 +15,11 @@ class JsonWriterPipeline:
         if os.stat('DataFile/items.json').st_size == 0:
             self.file.write('[\n')
 
+    def remove_trailing_comma(self, json_string):
+        json_string = json_string.rstrip(',\n]')
+        json_string += '\n]'
+        return json.loads(json_string)
+
     def process_item(self, item, spider):
         if not item['Imgs']:
             item['Imgs'] = ""
@@ -23,16 +28,28 @@ class JsonWriterPipeline:
         return item
 
     def close_spider(self, spider):
-        self.file.seek(self.file.tell() - 2) # remove the last comma
-        self.file.write('\n]')
+        # self.file.seek(self.file.tell() - 2) # remove the last comma
+        self.file.write(']')
         self.file.close()
+
+        with open('DataFile/items.json', 'r+', encoding="utf-8") as f:
+            json_string = f.read()
+            json_string = self.remove_trailing_comma(json_string)
+            # print(json_string)
+            f.seek(0, 0)
+            f.write(json.dumps(json_string, indent=4))
+            f.close()
     
 class JsonCateWriterPipeline:
     def __init__(self):
         self.file = open('DataFile/category1.json', 'w', encoding="utf-8")
         if os.stat('DataFile/category1.json').st_size == 0:
             self.file.write('[\n')
-
+    def remove_trailing_comma(self, json_string):
+        json_string = json_string.rstrip(',\n]')
+        json_string += '\n]'
+        return json.loads(json_string)
+    
     def process_item(self, item, spider):
         if not item['Imgs']:
             item['Imgs'] = ""
@@ -41,9 +58,18 @@ class JsonCateWriterPipeline:
         return item
 
     def close_spider(self, spider):
-        self.file.seek(self.file.tell() - 2) # remove the last comma
-        self.file.write('\n]')
+        # self.file.seek(self.file.tell() - 2) # remove the last comma
+        self.file.write(']')
         self.file.close()
+
+        with open('DataFile/category1.json', 'r+', encoding="utf-8") as f:
+            json_string = f.read()
+            json_string = self.remove_trailing_comma(json_string)
+            # print(json_string)
+            f.seek(0, 0)
+            f.write(json.dumps(json_string, indent=4))
+            f.close()
+        
 
 #  #work with database sqlite3
 # class EricspiderPipeline(object):

@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 from scrapy.crawler import CrawlerProcess
@@ -8,10 +8,6 @@ import linkTolink
 app = Flask(__name__)
 CORS(app)
 
-
-@app.route('/')
-def index():
-    return 'Trang chủ'
 
 # @app.route('/testGet', methods = ['Get', 'POST'])
 # def testGet():
@@ -30,7 +26,7 @@ def updateCate():
     return_code = process.wait()
     API_ENDPOINT = "https://mmt-main-dbserver.vercel.app/api/category" #MongoDB server api
     linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
-    return json.dumps({'result':'UpdateDB success'})
+    return json.dumps({'result':'UpdateDB success'}), 200
 
 @app.route('/updateDB', methods =['GET'])
 def updateDB():
@@ -41,12 +37,14 @@ def updateDB():
 
     API_ENDPOINT = "https://mmt-main-dbserver.vercel.app/api/product" #MongoDB server api
     linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
-    return json.dumps({'result':'UpdateDB success'})
+    return json.dumps({'result':'UpdateDB success'}), 200
 
-# @app.route('/stop')
-# def stop():
-#     process.stop()
-#     return 'Spider stopped'
+@app.route('/',  methods = ['GET'])
+def sayHello():
+    data = {"'Eric'": "'m la con ga'"}
+    response = jsonify(data)
+    response.headers['Content-Type'] = 'application/json'
+    return response, 200
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

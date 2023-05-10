@@ -21,6 +21,11 @@ class GoogleSpider(scrapy.Spider):
                 "DOWNLOADER_MIDDLEWARES" : {
                     'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725,
                 },
+                "DOWNLOAD_HANDLERS" : {
+                "http": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
+                "https": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
+
+                }
     }
     def convert_to_vnd(self, s):
         # Define conversion rates
