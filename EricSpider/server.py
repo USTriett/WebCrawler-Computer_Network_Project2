@@ -22,7 +22,8 @@ def index():
 #         return 'hello'
     
 #gui yeu cau cap nhat lai co so du lieu
-
+#Muon chay crawl local crawl 
+#proxy
 @app.route('/updateCategory', methods = ['GET'])
 def updateCate():
     process = subprocess.Popen(['scrapy', 'crawl', 'PhongVuCrawler'])
@@ -48,4 +49,4 @@ def updateDB():
 #     return 'Spider stopped'
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run()
