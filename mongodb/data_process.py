@@ -1,14 +1,10 @@
 from selenium import webdriver
-from pymongo.mongo_client import MongoClient
+
 import re
 from selenium.webdriver.chrome.options import Options
 import json
 import requests
-uri = 'mongodb+srv://USTriet:Uel.123456@cluster.sq4uzoz.mongodb.net/?retryWrites=true&w=majority'
 
-# Create a new client and connect to the server
-client = MongoClient("mongodb+srv://USTriet:1234@cluster.sq4uzoz.mongodb.net/?retryWrites=true&w=majority")
-db = client["Crawler"]
 
 url = "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-sdewu/endpoint/data/v1/action/"
 
@@ -212,7 +208,7 @@ def get_all_json():
 
         # product = db['Product']
         # cate = db['Category']
-        web = db['Website']
+        # web = db['Website']
         # result = []
         for item in cate:
             # url = item['URL']
