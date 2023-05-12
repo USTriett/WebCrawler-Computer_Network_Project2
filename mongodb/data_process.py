@@ -274,30 +274,6 @@ def get_all_json():
 #     f.write(']')
 # remove_trailing_comma('data.json')
 
-data = {
-        "Name": "Laptop MSI Modern 15 A11M (i5-1155G7/RAM 8GB/512GB SSD/ Windows 11)",
-        "Price": "13990000",
-        "Type": "Laptop",
-        "Imgs": [
-            "https://lh3.googleusercontent.com/AuqhERmRG5UzcXhYp4bksbuNkPecHQzTdlBN8COMmC866UWUcKE9P3DnEOFsWjB64G8UYAZJbrvpNgeec3M664cagmbuJXtt",
-            "https://lh3.googleusercontent.com/p5iKyyLKPYdHC-x4qImhfDOleAHNXLFGYvWg0mFHBAEIhGC8x15b7_9c7Y1Am75CM3DvwUNM7it3o4f7N4f1scZfbbpMZZVI",
-            "https://lh3.googleusercontent.com/QTDmu2AsIrhfxYH_lmTRKK488Sa4BX_ypGUeqPmIXReexolTJSONXCUakcMgRaGmS5FFnuqTMr85TJlBk_Wg4oKnv5K1fwo",
-            "https://lh3.googleusercontent.com/muBEYkfQ4gNo8s4rEmkw4YGXANBlhyiRaPq2bAiu9uOHgo45dB9-QQy8181HhZ96jsZoros5jXbrFmzIMqDPhruuvcMU4T4",
-            "https://lh3.googleusercontent.com/6jrMhLA161SkP3riT2UjbMs_aX4vOx5tKsypdEYTxphunEwUj0iCWWWIyqnexdm_HmPeiyla8HtdV9koULj2Yjw4i9yGZQA",
-            "https://lh3.googleusercontent.com/HoaHzIVBSolNHQH15OPinlJVq6IrD2H61QqQkBZyBqynO2M19YY0Vvuwna9cbzaaMWsC5yw43JiTGHKhs-UMm4nAAG6XFfjn",
-            "https://lh3.googleusercontent.com/ERAMeOhYYCnl0dLRAvVV3VzfUDtixW9ObKhQU4PNDaFPqQzjKK2dQ68PJZ62Xu9lWFzPDxdIa8G2z82STkjzJuBX8MF-nlSM"
-        ],
-        "Desc": {
-            "CPU": " Core i5 , Intel Core thế hệ thứ 11 ",
-            "OCung": " 15.6\" ( 1920 x 1080 ) Full HD  IPS  không cảm ứng , HD webcam ",
-            "RAM": " Onboard  Intel Iris Xe Graphics ",
-            "Card": " Intel Core i5-1155G7 ( 2.5 GHz - 4.5 GHz / 8MB / 4 nhân, 8 luồng ) i5-1155G7 ",
-            "ManHinh": " 1 x 8GB  DDR4  3200MHz ( 2 Khe cắm / Hỗ trợ tối đa 64GB )",
-            "HDH": " thường , LED ",
-            "KT&KL": " Windows 11  Windows 11 ,  3 cell  52 Wh , Pin liền "
-        }
-    }
-uploadCate(data)
 
 # count = 0
 # for item in get_all_json():
