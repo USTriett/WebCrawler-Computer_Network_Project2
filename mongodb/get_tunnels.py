@@ -9,4 +9,4 @@ def get_public_url(api_key = '2PeWrXxMRWtRv0GChNfXOHSqIIK_5iqox1sGyRHVsRJibHMi3'
     tunnel_info = response.json()
     return tunnel_info['tunnels'][0]['public_url']
 
-requests.get(url=get_public_url() + '/updateDB')
+# requests.get(url=get_public_url() + '/updateDB')

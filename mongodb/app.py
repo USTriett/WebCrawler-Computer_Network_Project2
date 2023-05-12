@@ -66,7 +66,7 @@ def updateProduct():
     return jsonify({'error': 'Some Exception throws'}), 400
 
 @app.route('/updateWebsite', methods = ['POST'])
-def updateProduct():
+def updateWeb():
     #get header request
     try:
         Content_Type =  request.headers.get('Content-Type')
@@ -82,7 +82,7 @@ def updateProduct():
     return jsonify({'error': 'Some Exception throws'}), 400
 
 @app.route('/getData', methods = ['POST'])
-def updateProduct():
+def getData():
     #get header request
     try:
         Content_Type =  request.headers.get('Content-Type')
@@ -99,12 +99,13 @@ def updateProduct():
 
 def update_db(t):
     while True:
+        time.sleep(t)
         try:
             public_url = get_tunnels.get_public_url()
             requests.get(url=public_url + '/updateDB') #crawlai
         except Exception as e:
             print(e)
-        time.sleep(t)
+       
 
 if __name__ == '__main__':
     t = threading.Thread(target=update_db, args=(1200000000,))
