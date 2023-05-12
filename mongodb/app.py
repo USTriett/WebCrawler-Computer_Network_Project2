@@ -109,5 +109,5 @@ def update_db(t):
 if __name__ == '__main__':
     t = threading.Thread(target=update_db, args=(1200000000,))
     t.start()
-    app.run(debug=True, port = 8001)
+    app.run()
         
