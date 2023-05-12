@@ -30,8 +30,8 @@ class WebCrawlerSpider(scrapy.Spider):
 
     def start_requests(self):
         
-        crawler_search_url = ['https://phongvu.vn/sitemap_categories_NH01-01-01-0{}.xml'.format(str(s)) for s in range(0, 3)]
-        # print(crawler_search_url)
+        crawler_search_url = ['https://phongvu.vn/sitemap_categories_NH01-01-01-0{}.xml'.format(str(s)) for s in range(1, 4)]
+        print(crawler_search_url)
         for i in range(0, 3):
             yield SeleniumRequest(url=crawler_search_url[i], callback=self.parse_search_results, wait_time=10)
 
@@ -45,7 +45,7 @@ class WebCrawlerSpider(scrapy.Spider):
         #         if i >= maxx and i < maxx + lenn:
         #             print(url)
         #             yield SeleniumRequest(url=url, callback=self.parse_product_data, wait_time=10, wait_until=EC.presence_of_element_located((By.CSS_SELECTOR, '#__NEXT_DATA__')), meta={'url': url})
-        self.setUrls.update(ListName.get_url('DataFile/category1.json'))
+        self.setUrls.update(ListName.get_url('DataFile/Category.json'))
         list_urls = set()
         for url in url_products:
             if url.startswith('https://phongvu.vn'):
@@ -74,10 +74,8 @@ class WebCrawlerSpider(scrapy.Spider):
             detail_product = json.loads(response.css('#__NEXT_DATA__::text').get())
             # print(detail_product['additionalProperty'][8]['value'])
             data = {
-                'Url': response.meta['url'],
                 'Name': detail_product['props']['pageProps']['serverProduct']['product']['productInfo']['displayName'],
                 'Price': detail_product['props']['pageProps']['serverProduct']['priceAndPromotions']['price'],
-                'Original_Price': detail_product['props']['pageProps']['serverProduct']['priceAndPromotions']['supplierRetailPrice'],
                 'Type': 'Laptop',
                 'Imgs': [sub['url'] for sub in detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['images']],
                 'Desc': [
@@ -94,15 +92,13 @@ class WebCrawlerSpider(scrapy.Spider):
             }
             # upload caterogy
             record = data.copy()
-            record['Name'] = record['Name'].split(' (')[0].replace("Laptop ", "")
+            record['Name'] = record['Name'].split(' (')[0]
             record['Desc'] = record['Desc'][0]
             record['Price'] = json.dumps(record['Price'])
 
             category = Category()
             category['Name'] = record['Name']
-            category['Url'] = record['Url']
-            category['Price'] = record['Price']
-            category['Original_Price'] = record['Original_Price']
+            category['Price'] = record['Price']      
             category['Type'] = record['Type']
             category['Imgs'] = record['Imgs']
             category['Desc'] = record['Desc']

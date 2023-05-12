@@ -35,8 +35,8 @@ def updateDB():
     process = subprocess.Popen(['scrapy', 'crawl', 'sosanhgia'])
     return_code = process.wait()
 
-    API_ENDPOINT = "https://mmt-main-dbserver.vercel.app/api/product" #MongoDB server api
-    linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
+    # API_ENDPOINT = "https://mmt-main-dbserver.vercel.app/api/product" #MongoDB server api
+    # linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
     return json.dumps({'result':'UpdateDB success'}), 200
 
 @app.route('/',  methods = ['GET'])

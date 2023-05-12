@@ -123,12 +123,23 @@ from selenium.webdriver.common.by import By
 #         "database": "mysql"
 #     }
 # }
-while(True):
-    urlex = input()
-    res = requests.get(url=urlex)
-    print(res.json())
 
 
 #convert dictionary to json string with sort_keys and indent
 # data_string = json.dumps(data_dict, sort_keys=True, indent=4)
 # print(data_string)
+url = "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-sdewu/endpoint/data/v1/action/find"
+payload = json.dumps({
+    "collection": "Website",
+    "database": "Crawler",
+    "dataSource": "Cluster",
+    "filter": {}
+})
+headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Request-Headers': '*',
+  'api-key': 'wrlShBSJ5hi8V8oFWdt9R131hhLJEx0WdJwtTzQaou0TGQD9ieti9U2j9coWGN9t', 
+}
+response = requests.request("POST", url, headers=headers, data=payload)
+data = response.json()
+print(response.json()['documents'])

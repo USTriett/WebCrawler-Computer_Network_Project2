@@ -12,18 +12,10 @@ from EricSpider.items import Product
 import requests
 class SoSanhSpider(scrapy.Spider):
     name = "sosanhgia"
-    start_list = ListName.get_names('DataFile/Category.json') + ListName.get_names('DataFile/output.json')
+    start_list = ListName.get_names('DataFile/output.json')
     # start_list = ["Laptop HP Pavilion 15-eg2059TU"]
     start_urls = [ 'https://www.sosanhgia.com/s-{}'.format(s) for s in start_list]
     allowed_domains = ["www.sosanhgia.com"]
-
-    custom_settings = {
-                "DOWNLOAD_HANDLERS" : {
-                "http": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
-                "https": "scrapy_pyppeteer.handler.ScrapyPyppeteerDownloadHandler",
-
-                }
-    }
 
     def start_requests(self):
         # for i in range(651, 709):
@@ -31,12 +23,13 @@ class SoSanhSpider(scrapy.Spider):
         #     print(url)
         i = 0
         for url in self.start_urls:
-            
+            print(url)
             yield scrapy.Request(url, self.parse, cb_kwargs=dict(cname = self.start_list[i]), meta=dict(
                 pyppeteer=True,
                 # pyppeteer_page_coroutines=[
                 #     PageCoroutine("waitForSelector", 'div.name h3')
                 # ],
+                url = url
             ),)
             i+=1
     def convert_to_vnd(self, s):
