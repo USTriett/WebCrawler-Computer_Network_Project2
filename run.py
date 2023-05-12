@@ -14,5 +14,5 @@ data = {
         "https://img.sosanhgia.com/images/200x200/cb0af44f1f0e433aab9927ba3eead1ad/o-cung-ssd-lexar-nq100-25-sata-(6gb/s)-hang-chinh-hang-240gb.jpeg"
     ]
 }
-res = requests.post(url='https://web-crawler-computer-network-project2-1sj5x0jfr-ustriett.vercel.app/updateProduct', headers=headers, data=data)
+res = requests.post(url='http://127.0.0.1:5000/updateProduct', headers=headers, json=data)
 print(res.text)

@@ -36,7 +36,7 @@ def updateCate():
         Content_Type =  request.headers.get('Content-Type')
         if(Content_Type != "application/json"):
             return jsonify({'error': 'Content-Type must be application/json'}), 400
-        data = request.data
+        data = request.get_json()
         if data is None:
             print('Data is invalid')
             return jsonify({'error': 'Invalid data'}), 400
@@ -56,7 +56,7 @@ def updateProduct():
         Content_Type =  request.headers.get('Content-Type')
         if(Content_Type != "application/json"):
             return jsonify({'error': 'Content-Type must be application/json'}), 400
-        data = request.data
+        data = request.get_json()
         if data is None:
             print('Data is invalid')
             return jsonify({'error': 'Invalid data'}), 400
@@ -75,7 +75,7 @@ def updateWeb():
         Content_Type =  request.headers.get('Content-Type')
         if(Content_Type != "application/json"):
             return jsonify({'error': 'Content-Type must be application/json'}), 400
-        data = request.data
+        data = request.get_json()
         if data is None:
             print('Data is invalid')
             return jsonify({'error': 'Invalid data'}), 400

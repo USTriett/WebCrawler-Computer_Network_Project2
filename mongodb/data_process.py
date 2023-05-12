@@ -83,13 +83,13 @@ def uploadWebsite(domain, icon = ''):
     return False
 
 def uploadProduct(data):
-    # print(data)
+    print(data)
     # print(data.get('Url'))
     try: 
-        # print(url)
-        domain = parse_domain(url)
+        Url = data.get('Url')
+        domain = parse_domain(Url)
         upPro = {
-            "Url": url,
+            "Url": Url,
             "Name": data.get('Name'),
             "Price": data.get('Price'),
             "OriginalPrice": data.get('OriginalPrice'),
@@ -97,6 +97,14 @@ def uploadProduct(data):
             "NameCategory": data.get('NameCategory'),
             "WebDomain": domain
         }
+    #     "Url": "https://www.sosanhgia.com/r/redirect.php?pm_id=120529783",
+    # "Name": "Ổ cứng SSD Lexar NQ100 2.5 SATA (6Gb/s) - Hàng Chính Hãng - 240GB",
+    # "Price": 469000,
+    # "OriginalPrice": 469000,
+    # "NameCategory": "Ổ cứng SSD Lexar NQ100 2.5” SATA (6Gb/s) - Hàng Chính Hãng",
+    # "Imgs": [
+    #     "https://img.sosanhgia.com/images/200x200/cb0af44f1f0e433aab9927ba3eead1ad/o-cung-ssd-lexar-nq100-25-sata-(6gb/s)-hang-chinh-hang-240gb.jpeg"
+    # ]
         
         print('Finding Cate...')
         payload = json.dumps({
