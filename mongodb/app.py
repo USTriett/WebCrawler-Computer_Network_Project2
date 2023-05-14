@@ -10,17 +10,18 @@ app = Flask(__name__)
 CORS(app)
 
 
-# @app.route('/testGet', methods = ['Get', 'POST'])
-# def testGet():
-#     if request.method == 'POST':
-#         # Xử lý đăng nhập ở đây
-#         return json.dumps({'lệnh':'Đăng nhập thành công'})
-#     else:
-#         return 'hello'
     
 #gui yeu cau cap nhat lai co so du lieu
 #Muon chay crawl local crawl 
 #proxy
+
+url ='https://ap-southeast-1.aws.data.mongodb-api.com/app/data-sdewu/endpoint/data/v1/action/'
+headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Request-Headers': '*',
+  'api-key': 'wrlShBSJ5hi8V8oFWdt9R131hhLJEx0WdJwtTzQaou0TGQD9ieti9U2j9coWGN9t'
+}
+
 @app.route('/',  methods = ['GET'])
 def sayHello():
     data = {"Chao": "User"}
@@ -46,7 +47,7 @@ def updateCate():
         
     except Exception as e:
         print(e)
-    return jsonify({'error': 'Some Exception throws'}), 400
+        return jsonify({'error': 'Some Exception throws'}), 400
 
 
 @app.route('/updateProduct', methods = ['POST'])
@@ -58,15 +59,17 @@ def updateProduct():
             return jsonify({'error': 'Content-Type must be application/json'}), 400
         data = request.get_json()
         if data is None:
-            print('Data is invalid')
-            return jsonify({'error': 'Invalid data'}), 400
-        elif (data_process.uploadProduct(data) == True):
-            return jsonify({'done': data}), 200
-        return jsonify({'error': 'Invalid data'}), 400
-        
+           print('Data is invalid')
+           return jsonify({'error': 'Invalid data 1'}), 400
+        if(data_process.uploadProduct(data) == True):
+            print("Success: " + str(data))
+            return jsonify({'Success': data}), 200
+        return jsonify({'Failed': data}), 400
+    
     except Exception as e:
         print(e)
-    return jsonify({'error': 'Some Exception throws'}), 400
+        return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
+
 
 @app.route('/updateWebsite', methods = ['POST'])
 def updateWeb():
@@ -78,14 +81,14 @@ def updateWeb():
         data = request.get_json()
         if data is None:
             print('Data is invalid')
-            return jsonify({'error': 'Invalid data'}), 400
+            return jsonify({'error': 'Invalid data 1'}), 400
         if(data_process.uploadWebsite(data) == True):
             return jsonify({'done': data}), 200
-        return jsonify({'error': 'Invalid data'}), 400
+        return jsonify({'error': 'Invalid data 2'}), 400
         
     except Exception as e:
         print(e)
-    return jsonify({'error': 'Some Exception throws'}), 400
+        return jsonify({'error': 'Some Exception throws'}), 400
 
 @app.route('/getData', methods = ['POST'])
 def getData():
@@ -101,7 +104,7 @@ def getData():
         
     except Exception as e:
         print(e)
-    return jsonify({'error': 'Some Exception throws'}), 400
+    return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
 
 def update_db(t):
     while True:

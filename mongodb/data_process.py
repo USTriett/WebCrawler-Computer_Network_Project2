@@ -1,10 +1,17 @@
 from selenium import webdriver
-
+import pymongo
 import re
 from selenium.webdriver.chrome.options import Options
 import json
 import requests
 
+import pymongo
+
+client = pymongo.MongoClient("mongodb+srv://USTriet:1234@cluster.sq4uzoz.mongodb.net/?retryWrites=true&w=majority")
+db = client["Crawler"]
+Product = db["Product"]
+Category = db["Category"]
+Website = db["Website"]
 
 url = "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-sdewu/endpoint/data/v1/action/"
 
@@ -46,44 +53,23 @@ def uploadWebsite(domain, icon = ''):
         'Icon': icon
     }
 
+    #Find domain
+    post = Website.find_one(filter={'Domain': domain})
     # Insert documents into collection
-    payload = json.dumps({
-        "collection": "Website",
-        "database": "Crawler",
-        "dataSource": "Cluster",
-        "filter":{'Domain': domain}
-        # "options": {"ordered": False}
-    })
-    response = requests.request("POST", url + 'findOne', headers=headers, data=payload)
-    post = response.json().get('document')
-    if post is None:
-        payload = json.dumps({
-            "collection": "Website",
-            "database": "Crawler",
-            "dataSource": "Cluster",
-            "document": web
-            # "options": {"ordered": False}
-        })
-        response = requests.request("POST", url + 'insertOne', headers=headers, data=payload)
+    
+    if post is None: #new website
+        Website.insert_one(document=web)
         print(web['Domain'])
         return True
-    elif post.get('Icon') == '':
-        payload = json.dumps({
-            "collection": "Website",
-            "database": "Crawler",
-            "dataSource": "Cluster",
-            "filter":{'Domain': domain},
-            "document": web
-            # "options": {"ordered": False}
-        })
-        response = requests.request("POST", url + 'replaceOne', headers=headers, data=payload)
+    elif post.get('Icon') == '': #existed web and icon is empty add default icon
+        Website.replace_one(filter={'Domain': domain}, replacement= web)
         print(web['Domain'])
         return True
     
     return False
 
 def uploadProduct(data):
-    print(data)
+    print("Product:" + str(data))
     # print(data.get('Url'))
     try: 
         Url = data.get('Url')
@@ -97,71 +83,28 @@ def uploadProduct(data):
             "NameCategory": data.get('NameCategory'),
             "WebDomain": domain
         }
-    #     "Url": "https://www.sosanhgia.com/r/redirect.php?pm_id=120529783",
-    # "Name": "Ổ cứng SSD Lexar NQ100 2.5 SATA (6Gb/s) - Hàng Chính Hãng - 240GB",
-    # "Price": 469000,
-    # "OriginalPrice": 469000,
-    # "NameCategory": "Ổ cứng SSD Lexar NQ100 2.5” SATA (6Gb/s) - Hàng Chính Hãng",
-    # "Imgs": [
-    #     "https://img.sosanhgia.com/images/200x200/cb0af44f1f0e433aab9927ba3eead1ad/o-cung-ssd-lexar-nq100-25-sata-(6gb/s)-hang-chinh-hang-240gb.jpeg"
-    # ]
         
         print('Finding Cate...')
-        payload = json.dumps({
-            "collection": "Category",
-            "database": "Crawler",
-            "dataSource": "Cluster",
-            "filter":{'Name': data.get('NameCategory')},
-            # "options": {"ordered": False}
-        })
-        response = requests.request("POST", url + 'findOne', headers=headers, data=payload)
-        post = response.json().get('document')
+        post = Category.find_one(filter={'Name': data.get('NameCategory')})
+
         if post is None: #khong co cate phu hop
             print('Cannot find Category of Product: upload failed')
             return False    
         else:
-            payload = json.dumps({
-            "collection": "Product",
-            "database": "Crawler",
-            "dataSource": "Cluster",
-            "filter":{'Name': data.get('Name'), 'Url': data.get('Url')},
-            # "options": {"ordered": False}
-            })
-            response = requests.request("POST", url + 'findOne', headers=headers, data=payload)
-            p = response.json().get('document')
+            p = Product.find_one(filter={'Name': data.get('Name'), 'Url': data.get('Url')})
             if p is None: # new Product
-                payload = json.dumps({
-                "collection": "Product",
-                "database": "Crawler",
-                "dataSource": "Cluster",
-                "document": upPro
-                # "options": {"ordered": False}
-                })
-                response = requests.request("POST", url + 'insertOne', headers=headers, data=payload)
-                print('Upload status: ' + str(response.status_code))
+                print("Adding new product...")
+                id = Product.insert_one(document=upPro)
+                print('Upload id: ' + str(id))
             else: #updata Price
                 if int(p.get('Price')) != data.get('Price'):
-                    payload = json.dumps({
-                    "collection": "Product",
-                    "database": "Crawler",
-                    "dataSource": "Cluster",
-                    "filter":{'Name': data.get('Name'), 'Url': data.get('Url')},
-                    "document": upPro
-                    # "options": {"ordered": False}
-                    })
-                    response = requests.request("POST", url + 'replaceOne', headers=headers, data=payload)
-                    print('Update status: ' + str(response.status_code))
-            if int(post['Price']) > upPro.get('Price'):
+                    print("Updating Price of Product...")
+                    id = Product.replace_one(filter={'Name': data.get('Name'), 'Url': data.get('Url')}, replacement=upPro)
+                    print('Update status: ' + str(id))
+            if int(post['Price']) > upPro.get('Price'): #update min Price of Category
                 post['Price'] = upPro.get('Price')
-                payload = json.dumps({
-                "collection": "Category",
-                "database": "Crawler",
-                "dataSource": "Cluster",
-                "filter":{'Name': data.get('NameCategory')},
-                "document": post
-                # "options": {"ordered": False}
-                })
-                response = requests.request("POST", url + 'replaceOne', headers=headers, data=payload)
+                print('Category found:' + str(post))
+                Category.replace_one(filter={'Name': data.get('NameCategory')}, replacement=post)
         
         uploadWebsite(data.get('Url'))
         print(upPro)    
@@ -174,27 +117,13 @@ def uploadProduct(data):
 # imgs = ["https://cdn.ankhang.vn/media/product/250_22214_laptop_dell_inspiron_3520_n3520_n5i5122w1_1.jpg"]
 def uploadCate(data):
     try:
-        payload = json.dumps({
-            "collection": "Category",
-            "database": "Crawler",
-            "dataSource": "Cluster",
-            "filter":{'Name': data.get('Name')},
-            # "options": {"ordered": False}
-        })
-        response = requests.request("POST", url + 'findOne', headers=headers, data=payload)
-        post = response.json().get('document')
+        post = Category.find_one(filter={'Name': data.get('Name')})
+        
         if post is None:# new category
             print('Load new Category...')
-            payload = json.dumps({
-                "collection": "Category",
-                "database": "Crawler",
-                "dataSource": "Cluster",
-                # "filter":{'Name': data.get('Name')},
-                "document": data
-                # "options": {"ordered": False}
-            })  
-            response = requests.request("POST", url + 'insertOne', headers=headers, data=payload)
-            print('Upload Status: ' + str(response.status_code))
+            id = Category.insert_one(document=data)
+            print('Loading: ' + str(id))
+            return True
         else:
             print('Category is existed')
             return False
@@ -205,14 +134,7 @@ def uploadCate(data):
 
 def get_all_json():
     try:
-        payload = json.dumps({
-            "collection": "Category",
-            "database": "Crawler",
-            "dataSource": "Cluster",
-            "filter": {}
-        })
-        response = requests.request("POST", url + 'find', headers=headers, data=payload)
-        cate = response.json()['documents']
+        cate = Category.find(filter={})
 
         # product = db['Product']
         # cate = db['Category']
@@ -227,24 +149,11 @@ def get_all_json():
             Desc = item.get('Desc')
             print(name_cate)
             p_arr = []
-            payload = json.dumps({
-                "collection": "Product",
-                "database": "Crawler",
-                "dataSource": "Cluster",
-                "filter": {'NameCategory': name_cate}
-            })
-            response = requests.request("POST", url + 'find', headers=headers, data=payload)
-            product = response.json()['documents']
+            product = Product.find(filter={'NameCategory': name_cate})
+            
             # print(len(product))
             for p in product:
-                payload = json.dumps({
-                    "collection": "Website",
-                    "database": "Crawler",
-                    "dataSource": "Cluster",
-                    "filter": {'Domain': p.get('WebDomain')}
-                })
-                response = requests.request("POST", url + 'findOne', headers=headers, data=payload)
-                web = response.json()['document']
+                web = Website.find_one(filter={'Domain': p.get('WebDomain')})
                 if web is not None:
                     p['WebIcon'] = web.get('Icon')
                 else:
