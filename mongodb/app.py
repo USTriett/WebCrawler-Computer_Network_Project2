@@ -61,10 +61,8 @@ def updateProduct():
         if data is None:
            print('Data is invalid')
            return jsonify({'error': 'Invalid data 1'}), 400
-        if(data_process.uploadProduct(data) == True):
-            print("Success: " + str(data))
-            return jsonify({'Success': data}), 200
-        return jsonify({'Failed': data}), 400
+       
+        return jsonify(data_process.uploadProduct(data)), 200
     
     except Exception as e:
         print(e)
@@ -97,11 +95,13 @@ def getData():
         Content_Type =  request.headers.get('Content-Type')
         if(Content_Type != "application/json"):
             return jsonify({'error': 'Content-Type must be application/json'}), 400
+        data_list=[]
         for data in data_process.get_all_json():
-            response = jsonify(data)
-            response.headers['Content-Type'] = 'application/json'
-            yield response, 200
-        
+            data_list.append(data)
+        response = jsonify(data_list)
+        response.headers['Content-Type'] = 'application/json'
+        return response, 200
+    
     except Exception as e:
         print(e)
     return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400

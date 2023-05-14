@@ -1,11 +1,11 @@
-from selenium import webdriver
+# from selenium import webdriver
 import pymongo
 import re
-from selenium.webdriver.chrome.options import Options
-import json
-import requests
+# from selenium.webdriver.chrome.options import Options
 
 import pymongo
+
+
 
 client = pymongo.MongoClient("mongodb+srv://USTriet:1234@cluster.sq4uzoz.mongodb.net/?retryWrites=true&w=majority")
 db = client["Crawler"]
@@ -22,13 +22,15 @@ headers = {
 }
 
 def parse_domain(url):
-    options = Options()
-    options.headless = True
-    driver = webdriver.Chrome(options=options)
-    # Go to first URL and click on Download menu
-    driver.get(url=url)
-    # print(1)
-    Url = driver.current_url
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-gpu")
+    # driver = webdriver.Chrome(options=chrome_options)
+    # # Go to first URL and click on Download menu
+    # driver.get(url=url)
+    # # print(1)
+    # Url = driver.current_url
     # options = Options()
     # options.headless = True
 
@@ -89,7 +91,7 @@ def uploadProduct(data):
 
         if post is None: #khong co cate phu hop
             print('Cannot find Category of Product: upload failed')
-            return False    
+            return {'mesage': 'Cannot find Category of Product: upload failed'}    
         else:
             p = Product.find_one(filter={'Name': data.get('Name'), 'Url': data.get('Url')})
             if p is None: # new Product
@@ -108,11 +110,11 @@ def uploadProduct(data):
         
         uploadWebsite(data.get('Url'))
         print(upPro)    
-        return True
+        return {'message': 'success'}
     except Exception as e:
         print("Exception throws")
         print(e)
-    return False
+        return {'Exception': str(e)}
 
 # imgs = ["https://cdn.ankhang.vn/media/product/250_22214_laptop_dell_inspiron_3520_n3520_n5i5122w1_1.jpg"]
 def uploadCate(data):
@@ -142,7 +144,6 @@ def get_all_json():
         # result = []
         for item in cate:
             # url = item['URL']
-            
             name_cate = item.get('Name')
             CatePrice = item.get('Price')
             CateImgs = item.get('Imgs')

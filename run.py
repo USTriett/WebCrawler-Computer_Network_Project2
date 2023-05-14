@@ -1,5 +1,6 @@
 import requests
 import json
+import mongodb.data_process as data_process
 headers = {
   'Content-Type': 'application/json',
 
@@ -13,5 +14,7 @@ data = {
     "Imgs": [
     ]
 }
-res = requests.post(url='http://conchoheo4.pythonanywhere.com/updateProduct', headers=headers, json=data)
-print(res.text)
+
+response = requests.post(url = 'http://conchoheo4.pythonanywhere.com/updateProduct', json = data, headers=headers)
+print(response.text)
+
