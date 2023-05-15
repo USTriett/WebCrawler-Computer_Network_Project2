@@ -7,7 +7,7 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 import json   
-import sqlite3
+# import sqlite3
 import os
 
 

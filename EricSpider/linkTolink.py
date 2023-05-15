@@ -6,7 +6,7 @@ import json
 #API_ENDPOINT = "https://mmt-main-dbserver.vercel.app/api/product"
 
 def updateProductToServer(API_ENDPOINT):
-    with open('DataFile/items.json', 'r', encoding="utf-8") as f:
+    with open('DataFile/items1.json', 'r', encoding="utf-8") as f:
         data = json.load(f)
     # data = 
     headers =  {'Content-Type': 'application/json'}

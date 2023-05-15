@@ -9,15 +9,19 @@ sys.path.insert(0, '/path/to/module/directory')
 import re
 import ListName
 from EricSpider.items import Product
-import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 class SoSanhSpider(scrapy.Spider):
     name = "sosanhgia"
     start_list = ListName.get_names('DataFile/output.json')
     # start_list = ["Laptop HP Pavilion 15-eg2059TU"]
     start_urls = [ 'https://www.sosanhgia.com/s-{}'.format(s) for s in start_list]
     allowed_domains = ["www.sosanhgia.com"]
-
+    options = Options()
+    
     def start_requests(self):
+        self.options.headless = True
         # for i in range(651, 709):
         #     url = 'https://www.sosanhgia.com/s-{}'.format(self.start_list[i])
         #     print(url)
@@ -75,7 +79,16 @@ class SoSanhSpider(scrapy.Spider):
                 # print(value)
                 total_vnd = value
         return int(total_vnd)
-
+    
+    def parse_url(self, url):
+        
+        driver = webdriver.Chrome(options=self.options)
+        # Go to first URL and click on Download menu
+        driver.get(url=url)
+        # print(1)
+        return driver.current_url
+        
+        
     def parse(self, response, cname):
         # print('processing on '+ '\n')
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -103,8 +116,8 @@ class SoSanhSpider(scrapy.Spider):
                 price = self.convert_to_vnd(prices[i].text)
                 product['Price'] = price
                 product['OriginalPrice'] = price
-                url = 'https://www.sosanhgia.com/r/redirect.php?pm_id={}'.format(id)
-              
+                url = self.parse_url('https://www.sosanhgia.com/r/redirect.php?pm_id={}'.format(id))
+                
                 product['Url'] = url
                 print(product)
                 yield product

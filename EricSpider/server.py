@@ -30,13 +30,13 @@ def updateCate():
 
 @app.route('/updateDB', methods =['GET'])
 def updateDB():
-    process = subprocess.Popen(['scrapy', 'crawl', 'google'])
-    return_code = process.wait()
-    process = subprocess.Popen(['scrapy', 'crawl', 'sosanhgia'])
-    return_code = process.wait()
+    # process = subprocess.Popen(['scrapy', 'crawl', 'google'])
+    # return_code = process.wait()
+    # process = subprocess.Popen(['scrapy', 'crawl', 'sosanhgia'])
+    # return_code = process.wait()
 
-    # API_ENDPOINT = "https://mmt-main-dbserver.vercel.app/api/product" #MongoDB server api
-    # linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
+    API_ENDPOINT = "https://web-crawler-computer-network-project2.vercel.app/updateProduct" #MongoDB server api
+    linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
     return json.dumps({'result':'UpdateDB success'}), 200
 
 @app.route('/',  methods = ['GET'])
@@ -47,4 +47,4 @@ def sayHello():
     return response, 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

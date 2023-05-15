@@ -1,9 +1,6 @@
-# from selenium import webdriver
 import pymongo
 import re
-# from selenium.webdriver.chrome.options import Options
 
-import pymongo
 
 
 
@@ -22,11 +19,9 @@ headers = {
 }
 
 def parse_domain(url):
-    # chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--disable-gpu")
-    # driver = webdriver.Chrome(options=chrome_options)
+    # options = Options()
+    # options.headless = True
+    # driver = webdriver.Chrome(options=options)
     # # Go to first URL and click on Download menu
     # driver.get(url=url)
     # # print(1)
