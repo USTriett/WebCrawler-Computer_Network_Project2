@@ -104,7 +104,7 @@ def getData():
     
     except Exception as e:
         print(e)
-    return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
+        return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
 
 def update_db(t):
     while True:

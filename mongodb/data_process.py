@@ -104,7 +104,7 @@ def uploadProduct(data):
                 Category.replace_one(filter={'Name': data.get('NameCategory')}, replacement=post)
         
         uploadWebsite(domain=domain)
-        print(upPro)    
+        print(upPro)
         return {'message': 'success'}
     except Exception as e:
         print("Exception throws")
@@ -137,24 +137,25 @@ def get_all_json():
         # cate = db['Category']
         # web = db['Website']
         # result = []
-        products = list(Product.find(filter={}))
+        products = Product.find(filter={})
 
-        websites = list(Website.find(filter={}))
+        websites = Website.find(filter={})
         for item in cate:
             # url = item['URL']
             name_cate = item.get('Name')
             CatePrice = item.get('Price')
             CateImgs = item.get('Imgs')
             Desc = item.get('Desc')
-            print(name_cate)
+            # print(name_cate)
             p_arr = []
             product = [d for d in products if (d['NameCategory'] == name_cate)]
             
             # print(len(product))
             for p in product:
+                del p['_id']
                 web = [d for d in websites if d['Domain'] == p.get('WebDomain')]
-                if web is not None:
-                    print(web)
+                if len(web) != 0:
+                    p['WebIcon'] = web[0].get('Icon')
                 else:
                     p['WebIcon'] = "https://websosanh.vn/images/no-logo.jpg"
                 p_arr.append(p)
