@@ -174,6 +174,17 @@ def get_all_json():
     except Exception as e:
         print(e)
 
+# def get_all_product():
+#     try:
+#         products = Product.find(filter={})
+#         # print(len(product))
+#         for p in products:
+#             del p['_id']
+#             yield p
+#     except Exception as e:
+#         print(e)
+
+
 # def remove_trailing_comma(file_path):
 #         with open(file_path, 'r', encoding='utf-8') as f:
 #             content = f.read().strip()

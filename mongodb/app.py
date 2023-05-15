@@ -106,18 +106,19 @@ def getData():
         print(e)
         return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
 
-def update_db(t):
+def update_db(t1, t2):
     while True:
-        time.sleep(t)
+        time.sleep(t1)
         try:
             public_url = get_tunnels.get_public_url()
             requests.get(url=public_url + '/updateDB') #crawlai
+            time.sleep(t2)
         except Exception as e:
             print(e)
        
 
 if __name__ == '__main__':
-    t = threading.Thread(target=update_db, args=(1200000000))
+    t = threading.Thread(target=update_db, args=(120, 12000000))
     t.start()
     app.run()
         
