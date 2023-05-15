@@ -142,13 +142,13 @@ def get_all_json():
         websites = Website.find(filter={})
         for item in cate:
             # url = item['URL']
-            name_cate = item.get('Name')
+            name_cate = item.get('Name').encode('utf-8')
             CatePrice = item.get('Price')
             CateImgs = item.get('Imgs')
-            Desc = item.get('Desc')
+            Desc = item.get('Desc').encode('utf-8')
             # print(name_cate)
             p_arr = []
-            product = [d for d in products if (d['NameCategory'] == name_cate)]
+            product = [d for d in products if (d.get('NameCategory').encode('utf-8') == name_cate)]
             
             # print(len(product))
             for p in product:
