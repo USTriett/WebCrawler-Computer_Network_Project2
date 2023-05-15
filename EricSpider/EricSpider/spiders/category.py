@@ -15,13 +15,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from urllib.parse import urlencode
 from shutil import which
 import ListName
+import re
 class WebCrawlerSpider(scrapy.Spider):
-    name = 'PhongVuCrawler'
+    name = 'LaptopCrawler'
     setUrls = set()
     custom_settings = {
-                'DOWNLOADER_MIDDLEWARES' :{
-                     'scrapy_selenium.SeleniumMiddleware': 800
-                     },
                'ITEM_PIPELINES' : {"EricSpider.pipelines.JsonCateWriterPipeline": 502}
 
     }
@@ -30,80 +28,64 @@ class WebCrawlerSpider(scrapy.Spider):
 
     def start_requests(self):
         
-        crawler_search_url = ['https://phongvu.vn/sitemap_categories_NH01-01-01-0{}.xml'.format(str(s)) for s in range(1, 4)]
-        print(crawler_search_url)
-        for i in range(0, 3):
-            yield SeleniumRequest(url=crawler_search_url[i], callback=self.parse_search_results, wait_time=10)
+        crawler_search_url = ['https://fptshop.com.vn/may-tinh-xach-tay?trang=23']
+        # print(crawler_search_url)
+        
+        yield scrapy.Request(url=crawler_search_url[0], callback=self.parse_product_data, meta=dict(
+            pyppeteer=True,
+            pyppeteer_page_coroutines=[
+                PageCoroutine("waitForSelector", 'div.cdt-product div.cdt-product__info')
+            ],
+            url = crawler_search_url[0]
+        ),)
 
-    def parse_search_results(self, response):
-        url_products  = response.css('.folder > div.opened > div:nth-child(2) > span:nth-child(2)::text').getall()
-        # if url_products is not None:
-        #     lenn = 1600
-        #     maxx = lenn * 0
-        #     for i in range(0, len(url_products), 2):
-        #         url = url_products[i]
-        #         if i >= maxx and i < maxx + lenn:
-        #             print(url)
-        #             yield SeleniumRequest(url=url, callback=self.parse_product_data, wait_time=10, wait_until=EC.presence_of_element_located((By.CSS_SELECTOR, '#__NEXT_DATA__')), meta={'url': url})
-        self.setUrls.update(ListName.get_url('DataFile/Category.json'))
-        list_urls = set()
-        for url in url_products:
-            if url.startswith('https://phongvu.vn'):
-                list_urls.add(url)
-        list_urls = list_urls.symmetric_difference(list_urls.intersection(self.setUrls))
-        self.setUrls = self.setUrls.union(list_urls)
-        # count = 0
-        for url in self.setUrls:
-            # if(count == 3):
-            #     break
-            # count += 1     
-            print(url)
-            yield scrapy.Request(url=url, callback= self.parse_product_data, meta=dict(
-                pyppeteer=True,
-                pyppeteer_page_coroutines=[
-                    PageCoroutine("waitForSelector", '#__NEXT_DATA__')
-                ],
-                url = url,
-            ),)
-
+    
     def parse_product_data(self, response):
         print(response.meta['url'])
-        detail_product = json.loads(response.css('#__NEXT_DATA__::text').get())
-        # print(detail_product['props']['pageProps']['serverProduct'])
-        try:
-            detail_product = json.loads(response.css('#__NEXT_DATA__::text').get())
+        soup = BeautifulSoup(response.text, 'html.parser')
+        divs = soup.select('div.cdt-product div.cdt-product__info')
+        imgs = soup.select('div.cdt-product div.cdt-product__img')
+        names = soup.select('div.cdt-product div.cdt-product__info h3 a')
+        # prices = soup.select('div.cdt-product div.cdt-product__info div.progress')
+        descs = soup.select('div.cdt-product div.cdt-product__info div.cdt-product__config__param') # 6 thong so
             # print(detail_product['additionalProperty'][8]['value'])
-            data = {
-                'Name': detail_product['props']['pageProps']['serverProduct']['product']['productInfo']['displayName'],
-                'Price': detail_product['props']['pageProps']['serverProduct']['priceAndPromotions']['price'],
-                'Type': 'Laptop',
-                'Imgs': [sub['url'] for sub in detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['images']],
-                'Desc': [
-                    {
-                        'CPU': detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][8]['value'],
-                        'OCung': detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][12]['value'],
-                        'RAM': detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][10]['value'],
-                        'Card': detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][9]['value'],
-                        'ManHinh': detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][11]['value'],
-                        'HDH': detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][19]['value'],
-                        'KT&KL': detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][20]['value'] + ', ' + detail_product['props']['pageProps']['serverProduct']['product']['productDetail']['attributeGroups'][22]['value']
-                    }
-                ]
-            }
+        print(len(divs))
+        try:
+            
             # upload caterogy
-            record = data.copy()
-            record['Name'] = record['Name'].split(' (')[0]
-            record['Desc'] = record['Desc'][0]
-            record['Price'] = json.dumps(record['Price'])
-
-            category = Category()
-            category['Name'] = record['Name']
-            category['Price'] = record['Price']      
-            category['Type'] = record['Type']
-            category['Imgs'] = record['Imgs']
-            category['Desc'] = record['Desc']
-            print(category)
-            yield category
+            for i in range(0, len(divs) - 1):
+                category = Category()
+                category['Name'] = ''
+                category['Price'] = 1000000000   
+                category['Type'] = 'Laptop'
+                category['Imgs'] = []
+                category['Desc'] = []
+                try:
+                    category['Name'] = str(names[i].get('title'))
+                    img = imgs[i].find('img')
+    
+                    if img is None:
+                        style = imgs[i]['style']
+                        img = re.search(r'url\("(.+?)"\)', style).group(1)
+                        print(img)
+                    else:
+                        img = img.get('src')
+                    category['Imgs'].append(img)
+                    spans = descs[i].find_all('span')
+                    # print(len(spans))
+                    desc = [
+                        {'CPU': spans[1].text},
+                        {'RAM': spans[2].text},
+                        {'Ổ Cứng': spans[3].text},
+                        {'Card Đồ hoạ': spans[4].text},
+                        {'KT&KL': spans[0].text + ' & ' + spans[5].text}
+                    ]
+                    category['Desc'] = desc
+        
+                    print(category)
+                    yield category
+                except Exception as e:
+                    print(e)
         except Exception as e:
             print(e)
         

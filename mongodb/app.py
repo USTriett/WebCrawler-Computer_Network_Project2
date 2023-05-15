@@ -47,7 +47,7 @@ def updateCate():
         
     except Exception as e:
         print(e)
-        return jsonify({'error': 'Some Exception throws'}), 400
+        return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
 
 
 @app.route('/updateProduct', methods = ['POST'])
@@ -108,6 +108,7 @@ def getData():
 
 def update_db(t1, t2):
     while True:
+        print('update1')
         time.sleep(t1)
         try:
             public_url = get_tunnels.get_public_url()
@@ -118,7 +119,7 @@ def update_db(t1, t2):
        
 
 if __name__ == '__main__':
-    t = threading.Thread(target=update_db, args=(120, 12000000))
+    t = threading.Thread(target=update_db, args=(20, 12000000))
     t.start()
-    app.run()
+    app.run(port=8001)
         

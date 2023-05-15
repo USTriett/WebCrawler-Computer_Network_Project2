@@ -4,7 +4,8 @@ import json
 from scrapy.crawler import CrawlerProcess
 import subprocess
 import linkTolink
-
+from multiprocessing import Process
+import subprocess
 app = Flask(__name__)
 CORS(app)
 
@@ -22,18 +23,27 @@ CORS(app)
 #proxy
 @app.route('/updateCategory', methods = ['GET'])
 def updateCate():
-    process = subprocess.Popen(['scrapy', 'crawl', 'PhongVuCrawler'])
-    return_code = process.wait()
-    API_ENDPOINT = "https://mmt-main-dbserver.vercel.app/api/category" #MongoDB server api
-    linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
+    p1 = Process(target=run_crawler, args=('LaptopCrawler',))
+    p1.start()
+    p1.join()
+    API_ENDPOINT = "https://web-crawler-computer-network-project2.vercel.app/updateCategory" #MongoDB server api
+    linkTolink.updateCateToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
     return json.dumps({'result':'UpdateDB success'}), 200
+
+def run_crawler(crawler_name):
+    process = subprocess.Popen(['scrapy', 'crawl', crawler_name])
+    return_code = process.wait()
+   
 
 @app.route('/updateDB', methods =['GET'])
 def updateDB():
-    process = subprocess.Popen(['scrapy', 'crawl', 'google'])
-    return_code = process.wait()
-    process = subprocess.Popen(['scrapy', 'crawl', 'sosanhgia'])
-    return_code = process.wait()
+    print('updating...')
+    p1 = Process(target=run_crawler, args=('google',))
+    p2 = Process(target=run_crawler, args=('sosanhgia',))
+    p1.start()
+    p2.start()
+    p1.join()
+    p2.join()
 
     API_ENDPOINT = "https://web-crawler-computer-network-project2.vercel.app/updateProduct" #MongoDB server api
     linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server

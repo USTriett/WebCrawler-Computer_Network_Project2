@@ -150,7 +150,7 @@ def get_all_json():
             p_arr = []
             product = [d for d in products if (d['NameCategory'] == name_cate)]
             
-            # print(len(product))
+            print(len(product))
             for p in product:
                 del p['_id']
                 web = [d for d in websites if d['Domain'] == p.get('WebDomain')]
