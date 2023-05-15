@@ -8,5 +8,5 @@ headers = {
 
 response = requests.post(url= 'https://web-crawler-computer-network-project2.vercel.app/getData', headers=headers)
 with open('test.json', 'w',encoding='utf-8') as f:
-    f.write(response.text)
+    f.write(json.dumps(response.json(), ensure_ascii= False, indent=4))
 

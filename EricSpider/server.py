@@ -30,10 +30,10 @@ def updateCate():
 
 @app.route('/updateDB', methods =['GET'])
 def updateDB():
-    # process = subprocess.Popen(['scrapy', 'crawl', 'google'])
-    # return_code = process.wait()
-    # process = subprocess.Popen(['scrapy', 'crawl', 'sosanhgia'])
-    # return_code = process.wait()
+    process = subprocess.Popen(['scrapy', 'crawl', 'google'])
+    return_code = process.wait()
+    process = subprocess.Popen(['scrapy', 'crawl', 'sosanhgia'])
+    return_code = process.wait()
 
     API_ENDPOINT = "https://web-crawler-computer-network-project2.vercel.app/updateProduct" #MongoDB server api
     linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
