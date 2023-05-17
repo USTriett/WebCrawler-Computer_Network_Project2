@@ -185,15 +185,57 @@ def get_all_json():
     except Exception as e:
         print(e)
 
-# def get_all_product():
-#     try:
-#         products = Product.find(filter={})
-#         # print(len(product))
-#         for p in products:
-#             del p['_id']
-#             yield p
-#     except Exception as e:
-#         print(e)
+def get_Cate_json(Name):
+    try:
+        item = Category.find_one(filter={'Name': Name})
+        if item is None:
+            return {}
+
+        Products = Product.find(filter={'NameCategory': Name})
+        products = [d for d in Products]
+        # print(len(products))
+        Websites = Website.find(filter={})
+        websites = [d for d in Websites]
+        # print(len(websites))
+        
+        # url = item['URL']
+        name_cate = Name
+        CatePrice = item.get('Price')
+        CateImgs = item.get('Imgs')
+        Desc = item.get('Desc')
+        # print(name_cate)
+        p_arr = []
+        product = []
+        count = 0
+        
+        for d in products:
+            # print(1)
+            if(d.get('_id') is not None):
+                del d['_id']
+            product.append(d)
+        print(len(product))
+        for p in product:
+            web = [d for d in websites if d['Domain'] == p.get('WebDomain')]
+            if len(web) != 0:
+                p['WebIcon'] = web[0].get('Icon')
+            else:
+                p['WebIcon'] = "https://websosanh.vn/images/no-logo.jpg"
+            p_arr.append(p)
+        print(len(p_arr))
+        record = {
+            'NameCategory': name_cate, #ten goc san pham 
+            'CatePrice' : CatePrice, #gia thap nhat
+            'CateImgs' : CateImgs,
+            'Desc' : Desc,
+            'Products': p_arr
+        }
+        # result.append(record)
+        # print(len(record['Products']))
+        # print(len(record.get('Products')))
+        return record
+        
+    except Exception as e:
+        print(e)
 
 
 # def remove_trailing_comma(file_path):

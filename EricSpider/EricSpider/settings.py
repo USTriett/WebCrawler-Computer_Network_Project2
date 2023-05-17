@@ -8,7 +8,35 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = "EricSpider"
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+PROXIES = [
+    'http://14.241.110.154:8080',
+    'https://27.70.160.80:20065',
+    'http://14.243.155.83:8081',
+    'http://103.114.104.192:10003',
+    'http://123.30.154.171:7777',
+    'https://14.170.154.193:19132',
+    'http://27.70.164.9:20065',
+    'http://103.238.75.226:32650',
+    'http://27.70.164.239:10035',
+    'http://103.141.143.1:41460',
+    'http://103.92.26.190:4002',
+    'http://202.134.19.50:3128',
+    'http://27.70.164.239:10011'
+
+]
+CONCURRENT_REQUESTS_PER_PROXY = 3
+USER_AGENTS = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+            'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0'
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393'
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4'
+            'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko'
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0'
+
+            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41. 9.Mozilla/5.0 (compatible; MSIE 9. 10.Mozilla/5.'
+        ]
+USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41. 9.Mozilla/5.0 (compatible; MSIE 9. 10.Mozilla/5.'
 SPIDER_MODULES = ["EricSpider.spiders"]
 NEWSPIDER_MODULE = "EricSpider.spiders"
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
@@ -24,11 +52,11 @@ DOWNLOAD_HANDLERS = {
 # DOWNLOADER_MIDDLEWARES = {
 #     'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725,
 # }
-from shutil import which
+# from shutil import which
   
-SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
-SELENIUM_DRIVER_ARGUMENTS=['--headless']  
+# SELENIUM_DRIVER_NAME = 'chrome'
+# SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+# SELENIUM_DRIVER_ARGUMENTS=['--headless']  
 
 
 ITEM_PIPELINES = {"EricSpider.pipelines.JsonWriterPipeline": 501}

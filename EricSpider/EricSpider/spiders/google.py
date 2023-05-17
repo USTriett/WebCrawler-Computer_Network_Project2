@@ -1,6 +1,5 @@
 import scrapy 
 from scrapy.linkextractors import LinkExtractor
-import scrapy
 from bs4 import BeautifulSoup
 from scrapy_pyppeteer.page import PageCoroutine
 from pyppeteer.errors import TimeoutError
@@ -9,20 +8,37 @@ sys.path.insert(0, '/path/to/module/directory')
 import re
 import ListName
 from EricSpider.items import Product
+
 class GoogleSpider(scrapy.Spider):
     name = "google"
-    start_list = ListName.get_names('DataFile/output.json')
+    start_list = ListName.get_names('DataFile/category1.json')
     # start_list = ["Laptop HP Pavilion 15-eg2059TU"]
-    start_urls = [ 'https://www.google.com/search?q={}'.format(s) for s in start_list]
-    allowed_domains = ["www.google.com"]
+    # start_urls = [ 'https://www.google.com.vn/search?q={}'.format(s) for s in start_list]
+    # allowed_domains = ['api.scraperapi.com']
     custom_settings = {
-                "SCRAPEOPS_API_KEY" : '862b8f2a-04bb-4ca7-9e34-4a4c6b99e658',
-                "SCRAPEOPS_PROXY_ENABLED" : True,
-                "DOWNLOADER_MIDDLEWARES" : {
-                    'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725,
-                },
-                
+        'DOWNLOADER_MIDDLEWARES' : {
+            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,  
+            'EricSpider.middlewares.RotateUserAgentMiddleware': 400,
+            'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 100, 
+        },
+        'ITEM_PIPELINES': {"EricSpider.pipelines.ProductUploader": 502},
+        'ROBOTSTXT_OBEY': False,
+        'LOG_LEVEL': 'WARNING',
+        'CONCURRENT_REQUESTS_PER_DOMAIN': 10,
+        'RETRY_TIMES': 5
     }
+    def start_requests(self):
+        queries = self.start_list
+        for query in queries:
+            url = 'https://www.google.com/search?q={}'.format(query)
+            yield scrapy.Request(url=url, callback=self.parse, cb_kwargs=dict(cname = query), meta=dict(
+                pyppeteer=True,
+                pyppeteer_page_coroutines=[
+                    PageCoroutine("waitForSelector", 'a.pla-unit-title-link span.pymv4e')
+                ],
+                url = url
+            ))
+
     def convert_to_vnd(self ,s):
         # Define conversion rates
         usd_to_vnd = 23000
@@ -65,19 +81,6 @@ class GoogleSpider(scrapy.Spider):
             return int(new_string)
         return int(total_vnd)
 
-    def start_requests(self):
-        # for i in range(1, 2):
-        #     url = 'https://www.google.com.vn/search?q=google ads {}'.format(self.start_list[i])
-        #     print(url)
-        i = 0
-        for url in self.start_urls:
-            # if(i == 1):
-            #     break
-            yield scrapy.Request(url, self.parse, cb_kwargs=dict(cname = self.start_list[i]), meta=dict(
-                pyppeteer=True,
-                url = url
-            ),)
-            i += 1
 
     def parse(self, response, cname):
         print('processing on '+ '\n')
@@ -86,7 +89,9 @@ class GoogleSpider(scrapy.Spider):
         names = soup.select('a.pla-unit-title-link span.pymv4e')
         urls = soup.select('a.clickable-card')
         prices = soup.select('span.e10twf')
+        # print(1)
         try:
+            print(len(names))
             for index in range(0, 2):
                 if(index == len(names)):
                     break

@@ -4,9 +4,14 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from EricSpider.settings import USER_AGENTS, PROXIES
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+import random
+
+
+def get_new_proxy(index):
+    return PROXIES[index]
 
 
 class EricspiderSpiderMiddleware:
@@ -54,6 +59,11 @@ class EricspiderSpiderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+class RotateUserAgentMiddleware(object):
+
+    def process_request(self, request, spider):
+        request.headers.setdefault('User-Agent', random.choice(USER_AGENTS))
 
 
 class EricspiderDownloaderMiddleware:

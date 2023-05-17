@@ -9,7 +9,15 @@ from itemadapter import ItemAdapter
 import json   
 # import sqlite3
 import os
-
+import requests
+class ProductUploader:
+    def process_item(self, item, spider):
+        headers = {'Content-Type': 'application/json'}
+        data = json.dumps(dict(item))
+        response = requests.post(url='https://web-crawler-computer-network-project2.vercel.app/updateProduct', headers=headers, data = data)
+        print('mesage: ' + response.text)
+        print('status: ' + str(response.status_code))
+                
 
 class JsonWriterPipeline:
     def __init__(self):

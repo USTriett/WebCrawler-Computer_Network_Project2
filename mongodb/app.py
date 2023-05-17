@@ -96,10 +96,15 @@ def getData():
         Content_Type =  request.headers.get('Content-Type')
         if(Content_Type != "application/json"):
             return jsonify({'error': 'Content-Type must be application/json'}), 400
+        Name_Cate = request.headers.get('Name-Cate')
         data_list=[]
-        for data in data_process.get_all_json():
-            # print(len(data.get('Products')))
-            data_list.append(copy.deepcopy(data))
+        if Name_Cate is None:
+            for data in data_process.get_all_json():
+                # print(len(data.get('Products')))
+                data_list.append(copy.deepcopy(data))
+        else:
+            # print('Get one:' + Name_Cate)
+            data_list.append(copy.deepcopy(data_process.get_Cate_json(Name_Cate)))
             
         # print(data_list[0].get('Products'))
         response = make_response(json.dumps(data_list, ensure_ascii=False, indent=4))
@@ -109,6 +114,9 @@ def getData():
     except Exception as e:
         print(e)
         return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
+
+
+
 
 def update_db(t1, t2):
     while True:

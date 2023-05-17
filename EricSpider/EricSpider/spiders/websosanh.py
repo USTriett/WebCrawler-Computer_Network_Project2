@@ -21,6 +21,10 @@ class SoSanhSpider(scrapy.Spider):
     options = Options()
     options.headless = True
     driver = webdriver.Chrome(options=options)
+    custom_settings = {
+            'ITEM_PIPELINES': {"EricSpider.pipelines.ProductUploader": 502}
+    }
+
     def start_requests(self):
         
         # for i in range(651, 709):

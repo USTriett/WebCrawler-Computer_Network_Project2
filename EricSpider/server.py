@@ -45,9 +45,9 @@ def updateDB():
     p1.join()
     p2.join()
 
-    API_ENDPOINT = "https://web-crawler-computer-network-project2.vercel.app/updateProduct" #MongoDB server api
-    linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
-    return json.dumps({'result':'UpdateDB success'}), 200
+    # API_ENDPOINT = "https://web-crawler-computer-network-project2.vercel.app/updateProduct" #MongoDB server api
+    # linkTolink.updateProductToServer(API_ENDPOINT=API_ENDPOINT) #update to Server
+    return json.dumps({'result':'UpdateDB success'}), 400
 
 @app.route('/',  methods = ['GET'])
 def sayHello():
