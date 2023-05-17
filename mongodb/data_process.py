@@ -123,7 +123,7 @@ def uploadCate(data):
             return True
         else:
             print('Category is existed')
-            return False
+            return True
     except Exception as e:
         print(e)
         return False
