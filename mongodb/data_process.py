@@ -1,7 +1,7 @@
 import pymongo
 import re
 
-
+import json
 
 
 client = pymongo.MongoClient("mongodb+srv://USTriet:1234@cluster.sq4uzoz.mongodb.net/?retryWrites=true&w=majority")
@@ -137,9 +137,13 @@ def get_all_json():
         # cate = db['Category']
         # web = db['Website']
         # result = []
-        products = Product.find(filter={})
+        Products = Product.find(filter={})
+        products = [d for d in Products]
+        print(len(products))
+        Websites = Website.find(filter={})
+        websites = [d for d in Websites]
+        print(len(websites))
 
-        websites = Website.find(filter={})
         for item in cate:
             # url = item['URL']
             name_cate = item.get('Name')
@@ -148,11 +152,17 @@ def get_all_json():
             Desc = item.get('Desc')
             # print(name_cate)
             p_arr = []
-            product = [d for d in products if (d['NameCategory'] == name_cate)]
+            product = []
+            count = 0
             
-            print(len(product))
+            for d in products:
+                # print(1)
+                if(d.get('_id') is not None):
+                    del d['_id']
+                if d.get('NameCategory') == name_cate:
+                    product.append(d)
+            # print(len(product))
             for p in product:
-                del p['_id']
                 web = [d for d in websites if d['Domain'] == p.get('WebDomain')]
                 if len(web) != 0:
                     p['WebIcon'] = web[0].get('Icon')
@@ -170,10 +180,10 @@ def get_all_json():
             # result.append(record)
             # print(record['Products'])
             yield record
-
+            p_arr.clear()
+            product.clear()
     except Exception as e:
         print(e)
-
 # def get_all_product():
 #     try:
 #         products = Product.find(filter={})

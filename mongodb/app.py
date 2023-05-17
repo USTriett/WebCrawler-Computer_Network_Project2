@@ -108,11 +108,14 @@ def getData():
 
 def update_db(t1, t2):
     while True:
-        print('update1')
+        # print('update1')
         time.sleep(t1)
         try:
-            public_url = get_tunnels.get_public_url()
-            requests.get(url=public_url + '/updateDB') #crawlai
+            while(True):
+                public_url = get_tunnels.get_public_url()
+                res = requests.get(url=public_url + '/updateDB') #crawlai
+                if res.status_code == 200:
+                    break;
             time.sleep(t2)
         except Exception as e:
             print(e)
