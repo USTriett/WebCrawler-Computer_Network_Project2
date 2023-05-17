@@ -61,7 +61,7 @@ def post_cate(API_ENDPOINT, headers, queue):
         queue.task_done()
 
 def updateCateToServer(API_ENDPOINT):
-    with open('DataFile/output.json', 'r', encoding="utf-8") as f:
+    with open('DataFile/category1.json', 'r', encoding="utf-8") as f:
         data = json.load(f)
     # data = 
     headers =  {'Content-Type': 'application/json'}

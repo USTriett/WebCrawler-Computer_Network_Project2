@@ -82,7 +82,7 @@ class JsonCateWriterPipeline:
             data2 = json.load(f2)
             merged_data = data1 + data2
             # print(merged_data)
-        with open('DataFile/output.json', 'w', encoding='utf-8') as f:
+        with open('DataFile/category1.json', 'w', encoding='utf-8') as f:
             f.write(json.dumps(merged_data, indent=4 ,ensure_ascii=False))
 #  #work with database sqlite3
 # class EricspiderPipeline(object):

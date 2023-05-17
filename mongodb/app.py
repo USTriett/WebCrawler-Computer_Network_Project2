@@ -121,5 +121,5 @@ def update_db(t1, t2):
 if __name__ == '__main__':
     t = threading.Thread(target=update_db, args=(20, 12000000))
     t.start()
-    app.run(port=8001)
+    app.run()
         

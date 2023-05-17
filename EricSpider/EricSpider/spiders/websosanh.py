@@ -14,14 +14,15 @@ from selenium.webdriver.chrome.options import Options
 
 class SoSanhSpider(scrapy.Spider):
     name = "sosanhgia"
-    start_list = ListName.get_names('DataFile/output.json')
+    start_list = ListName.get_names('DataFile/category1.json')
     # start_list = ["Laptop HP Pavilion 15-eg2059TU"]
     start_urls = [ 'https://www.sosanhgia.com/s-{}'.format(s) for s in start_list]
     allowed_domains = ["www.sosanhgia.com"]
     options = Options()
-    
+    options.headless = True
+    driver = webdriver.Chrome(options=options)
     def start_requests(self):
-        self.options.headless = True
+        
         # for i in range(651, 709):
         #     url = 'https://www.sosanhgia.com/s-{}'.format(self.start_list[i])
         #     print(url)
@@ -36,6 +37,7 @@ class SoSanhSpider(scrapy.Spider):
                 url = url
             ),)
             i+=1
+        self.driver.quit()
     def convert_to_vnd(self, s):
         # Define conversion rates
         usd_to_vnd = 23000
@@ -80,9 +82,9 @@ class SoSanhSpider(scrapy.Spider):
                 total_vnd = value
         return int(total_vnd)
     
-    def parse_url(self, url):
+    def parse_url(self, url, driver):
         
-        driver = webdriver.Chrome(options=self.options)
+        
         # Go to first URL and click on Download menu
         driver.get(url=url)
         # print(1)
@@ -116,7 +118,7 @@ class SoSanhSpider(scrapy.Spider):
                 price = self.convert_to_vnd(prices[i].text)
                 product['Price'] = price
                 product['OriginalPrice'] = price
-                url = self.parse_url('https://www.sosanhgia.com/r/redirect.php?pm_id={}'.format(id))
+                url = self.parse_url('https://www.sosanhgia.com/r/redirect.php?pm_id={}'.format(id), self.driver)
                 
                 product['Url'] = url
                 print(product)
