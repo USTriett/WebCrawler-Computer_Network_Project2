@@ -169,7 +169,7 @@ def get_all_json():
                 else:
                     p['WebIcon'] = "https://websosanh.vn/images/no-logo.jpg"
                 p_arr.append(p)
-            # print(p_arr)
+            # print(len(p_arr))
             record = {
                 'NameCategory': name_cate, #ten goc san pham 
                 'CatePrice' : CatePrice, #gia thap nhat
@@ -178,12 +178,13 @@ def get_all_json():
                 'Products': p_arr,
             }
             # result.append(record)
-            # print(record['Products'])
+            print(record['Products'])
             yield record
             p_arr.clear()
             product.clear()
     except Exception as e:
         print(e)
+
 # def get_all_product():
 #     try:
 #         products = Product.find(filter={})

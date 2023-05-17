@@ -75,5 +75,5 @@ def updateCateToServer(API_ENDPOINT):
         t = threading.Thread(target=post_cate, args=(API_ENDPOINT, headers, queue))
         t.start()
 
-updateCateToServer('https://web-crawler-computer-network-project2.vercel.app/updateCategory')
-updateProductToServer('https://web-crawler-computer-network-project2.vercel.app/updateProduct')
+# updateCateToServer('https://web-crawler-computer-network-project2.vercel.app/updateCategory')
+# updateProductToServer('https://web-crawler-computer-network-project2.vercel.app/updateProduct')
