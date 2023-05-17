@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import json
 import data_process
 import get_tunnels
 import requests
 import time
+import copy
 import threading
 app = Flask(__name__)
 CORS(app)
@@ -97,8 +98,11 @@ def getData():
             return jsonify({'error': 'Content-Type must be application/json'}), 400
         data_list=[]
         for data in data_process.get_all_json():
-            data_list.append(data)
-        response = jsonify(data_list)
+            # print(len(data.get('Products')))
+            data_list.append(copy.deepcopy(data))
+            
+        # print(data_list[0].get('Products'))
+        response = make_response(json.dumps(data_list, ensure_ascii=False, indent=4))
         response.headers['Content-Type'] = 'application/json'
         return response, 200
     
@@ -108,14 +112,15 @@ def getData():
 
 def update_db(t1, t2):
     while True:
-        # print('update1')
-        time.sleep(t1)
         try:
             while(True):
+                # print('update1')
+                time.sleep(t1)
+
                 public_url = get_tunnels.get_public_url()
                 res = requests.get(url=public_url + '/updateDB') #crawlai
                 if res.status_code == 200:
-                    break;
+                    break
             time.sleep(t2)
         except Exception as e:
             print(e)

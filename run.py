@@ -6,6 +6,6 @@ headers = {
 
 }
 
-response = requests.post(url= 'https://web-crawler-computer-network-project2.vercel.app/getData', headers=headers)
+response = requests.post(url= 'http://127.0.0.1:8001/getData', headers=headers)
 with open('data.json', 'w', encoding='utf-8') as f:
     f.write(json.dumps(response.json(), ensure_ascii=False, indent=4))

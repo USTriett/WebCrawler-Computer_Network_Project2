@@ -175,10 +175,10 @@ def get_all_json():
                 'CatePrice' : CatePrice, #gia thap nhat
                 'CateImgs' : CateImgs,
                 'Desc' : Desc,
-                'Products': p_arr,
+                'Products': p_arr
             }
             # result.append(record)
-            print(record['Products'])
+            # print(len(record['Products']))
             yield record
             p_arr.clear()
             product.clear()
