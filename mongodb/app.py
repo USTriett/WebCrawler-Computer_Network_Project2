@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response,  render_template
 from flask_cors import CORS
 import json
 import data_process
@@ -116,6 +116,50 @@ def getData():
         return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
 
 
+# renderCate(Name) {
+#     try {
+        
+
+@app.route('/process_data', methods=['POST'])
+def process_data():
+    # Lấy giá trị của tham số name_cate từ form
+    name_cate = request.form.get('name_cate')
+    
+    # Lấy giá trị của tham số cate_price từ form
+    cate_price = request.form.get('cate_price')
+    
+    # Lấy giá trị của tham số desc từ form và giải mã chuỗi JSON
+    desc_json = request.form.get('desc')
+    desc = json.loads(desc_json)
+    
+    # Lấy giá trị của tham số img_len từ form
+    img_len = request.form.get('img_len')
+    
+    # Lấy giá trị của tham số num_prods từ form
+    num_prods = request.form.get('num_prods')
+    
+    # Lấy giá trị của các trường input vớitên `img_link_i` từ form
+    img_links = []
+    for i in range(int(img_len)):
+        img_link = request.form.get(f'img_link_{i}')
+        img_links.append(img_link)
+    
+    # Lấy giá trị của các trường input với tên `product_i_name`, `product_i_url`, `product_i_price`,
+    # `product_i_original_price`, `product_i_img`, `product_i_web_icon` từ form
+    products = []
+    for i in range(int(num_prods)):
+        product = {}
+        product['Name'] = request.form.get(f'product_{i}_name')
+        product['Url'] = request.form.get(f'product_{i}_url')
+        product['Price'] = request.form.get(f'product_{i}_price')
+        product['OriginalPrice'] = request.form.get(f'product_{i}_original_price')
+        product['Imgs'] = request.form.get(f'product_{i}_img')
+        product['WebIcon'] = request.form.get(f'product_{i}_web_icon')
+        products.append(product)
+    
+        # Xử lý dữ liệu ở đây
+    
+        return render_template('data.html', name_cate=name_cate, cate_price=cate_price, desc=desc, img_links=img_links, products=products)
 @app.route('/getProducts', methods = ['POST'])
 def getProducts():
     #get header request

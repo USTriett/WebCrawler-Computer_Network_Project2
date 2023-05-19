@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Data</title>
+</head>
+<body>
+    <script>
+        var data = {
+            name_cate: "{{ name_cate }}",
+            cate_price: "{{ cate_price }}",
+            desc: {{ desc | tojson }},
+            img_links: {{ img_links | tojson }},
+            products: {{ products | tojson }}
+        };
+    </script>
+    <script src="{{ url_for('static', filename='result.js') }}"></script>
+</body>
+</html>
