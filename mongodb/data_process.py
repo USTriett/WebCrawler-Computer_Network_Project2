@@ -175,7 +175,9 @@ def get_all_json():
                 'CatePrice' : CatePrice, #gia thap nhat
                 'CateImgs' : CateImgs,
                 'Desc' : Desc,
-                'Products': p_arr
+                'Products': p_arr,
+                'Type' : item.get('Type'),
+
             }
             # result.append(record)
             # print(len(record['Products']))
@@ -246,8 +248,12 @@ def get_products():
         # products = [d for d in Products]
         # print(len(products))
         # print(len(websites))
-        webs = Website.find()
-        cates = Category.find()
+        webs = Website.find(filter={})
+        web = [d for d in webs]
+        
+        cates = Category.find(filter={})
+        cate = [d for d in cates]
+
         # url = item['URL']
         # print(name_cate)
         # product = []
@@ -256,15 +262,16 @@ def get_products():
             if(p.get('_id') is not None):
                 del p['_id']
             # print(p)
-            web = [d for d in webs if d['Domain'] == p.get('WebDomain')]
-            type = [d.get('Type') for d in cates if(p.get('NameCategory') == d.get('Name'))]
+            web2 = [d for d in web if d['Domain'] == p.get('WebDomain')]
+            type = [d for d in cate if(p.get('NameCategory') == d.get('Name'))]
             if len(type) != 0:
-                p['Type'] = type[0]
+                p['Type'] = type[0].get('Type')
+                print(type[0].get('Type'))
             else:
                 p['Type'] = 'Laptop'
 
-            if len(web) != 0:
-                p['WebIcon'] = web[0].get('Icon')
+            if len(web2) != 0:
+                p['WebIcon'] = web2[0].get('Icon')
             else:
                 p['WebIcon'] = "https://websosanh.vn/images/no-logo.jpg"
                 
