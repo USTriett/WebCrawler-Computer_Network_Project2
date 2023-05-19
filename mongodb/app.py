@@ -7,6 +7,8 @@ import requests
 import time
 import copy
 import threading
+from urllib.parse import unquote
+import os
 app = Flask(__name__)
 CORS(app)
 
@@ -56,8 +58,8 @@ def updateProduct():
     #get header request
     try:
         Content_Type =  request.headers.get('Content-Type')
-        if(Content_Type != "application/json"):
-            return jsonify({'error': 'Content-Type must be application/json'}), 400
+        # if(Content_Type != "application/json"):
+        #     return jsonify({'error': 'Content-Type must be application/json'}), 400
         data = request.get_json()
         if data is None:
            print('Data is invalid')
@@ -124,13 +126,14 @@ def getData():
 def process_data():
     # Lấy giá trị của tham số name_cate từ form
     name_cate = request.form.get('name_cate')
-    
+    print(name_cate)
     # Lấy giá trị của tham số cate_price từ form
     cate_price = request.form.get('cate_price')
-    
+    print(cate_price)
     # Lấy giá trị của tham số desc từ form và giải mã chuỗi JSON
     desc_json = request.form.get('desc')
-    desc = json.loads(desc_json)
+
+    desc = json.loads(unquote(desc_json))
     
     # Lấy giá trị của tham số img_len từ form
     img_len = request.form.get('img_len')
@@ -158,8 +161,8 @@ def process_data():
         products.append(product)
     
         # Xử lý dữ liệu ở đây
-    
-        return render_template('data.html', name_cate=name_cate, cate_price=cate_price, desc=desc, img_links=img_links, products=products)
+        template_path = os.path.join(os.path.dirname(__file__), 'data.html')
+        return render_template(template_path, name_cate=name_cate, cate_price=cate_price, desc=desc, img_links=img_links, products=products)
 @app.route('/getProducts', methods = ['POST'])
 def getProducts():
     #get header request
@@ -203,5 +206,5 @@ def update_db(t1, t2):
 if __name__ == '__main__':
     t = threading.Thread(target=update_db, args=(20, 12000000))
     t.start()
-    app.run()
+    app.run(port=8001)
         

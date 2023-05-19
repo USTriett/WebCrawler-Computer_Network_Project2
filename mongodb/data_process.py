@@ -190,7 +190,10 @@ def get_all_json():
 
 def get_Cate_json(name):
     try:
+        Name = name
+        print(Name)
         Name = unquote(name)
+        
         item = Category.find_one(filter={'Name': Name})
         if item is None:
             return {}
