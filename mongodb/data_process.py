@@ -2,6 +2,7 @@ import pymongo
 import re
 
 import json
+from urllib.parse import unquote
 
 
 client = pymongo.MongoClient("mongodb+srv://USTriet:1234@cluster.sq4uzoz.mongodb.net/?retryWrites=true&w=majority")
@@ -187,8 +188,9 @@ def get_all_json():
     except Exception as e:
         print(e)
 
-def get_Cate_json(Name):
+def get_Cate_json(name):
     try:
+        Name = unquote(name)
         item = Category.find_one(filter={'Name': Name})
         if item is None:
             return {}
