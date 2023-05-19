@@ -227,6 +227,7 @@ def get_Cate_json(Name):
             'CatePrice' : CatePrice, #gia thap nhat
             'CateImgs' : CateImgs,
             'Desc' : Desc,
+            'Type' : item.get('Type'),
             'Products': p_arr
         }
         # result.append(record)
@@ -246,7 +247,7 @@ def get_products():
         # print(len(products))
         # print(len(websites))
         webs = Website.find()
-        
+        cates = Category.find()
         # url = item['URL']
         # print(name_cate)
         # product = []
@@ -256,6 +257,12 @@ def get_products():
                 del p['_id']
             # print(p)
             web = [d for d in webs if d['Domain'] == p.get('WebDomain')]
+            type = [d.get('Type') for d in cates if(p.get('NameCategory') == d.get('Name'))]
+            if len(type) != 0:
+                p['Type'] = type[0]
+            else:
+                p['Type'] = 'Laptop'
+
             if len(web) != 0:
                 p['WebIcon'] = web[0].get('Icon')
             else:
