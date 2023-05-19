@@ -238,6 +238,39 @@ def get_Cate_json(Name):
         print(e)
 
 
+def get_products():
+    try:
+
+        Products = Product.find(filter={})
+        # products = [d for d in Products]
+        # print(len(products))
+        # print(len(websites))
+        webs = Website.find()
+        
+        # url = item['URL']
+        # print(name_cate)
+        # product = []
+        # count = 0
+        for p in Products:
+            if(p.get('_id') is not None):
+                del p['_id']
+            # print(p)
+            web = [d for d in webs if d['Domain'] == p.get('WebDomain')]
+            if len(web) != 0:
+                p['WebIcon'] = web[0].get('Icon')
+            else:
+                p['WebIcon'] = "https://websosanh.vn/images/no-logo.jpg"
+                
+            
+            yield p
+
+        
+    except Exception as e:
+        print(e)
+
+
+
+
 # def remove_trailing_comma(file_path):
 #         with open(file_path, 'r', encoding='utf-8') as f:
 #             content = f.read().strip()

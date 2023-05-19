@@ -116,6 +116,28 @@ def getData():
         return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
 
 
+@app.route('/getProducts', methods = ['POST'])
+def getProducts():
+    #get header request
+    try:
+        Content_Type =  request.headers.get('Content-Type')
+        if(Content_Type != "application/json"):
+            return jsonify({'error': 'Content-Type must be application/json'}), 400
+        data_list=[]
+        
+        for data in data_process.get_products():
+            # print(len(data.get('Products')))
+            data_list.append(copy.deepcopy(data))
+            
+        # print(data_list[0].get('Products'))
+        response = make_response(json.dumps(data_list, ensure_ascii=False, indent=4))
+        response.headers['Content-Type'] = 'application/json'
+        return response, 200
+    
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'Some Exception throws', 'e': str(e)}), 400
+
 
 
 def update_db(t1, t2):
